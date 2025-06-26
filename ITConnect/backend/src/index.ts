@@ -34,7 +34,6 @@ app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
 // ✅ Static files
-app.use('/uploads', express.static('uploads'));
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // ✅ Routes (only once per route!)
@@ -78,7 +77,7 @@ const startServer = async () => {
   try {
     await connectDB();
     app.listen(PORT, () => {
-      console.log(`🚀 Server is running on http://localhost:${PORT}`);
+      console.log(`🚀 Server is running on port ${PORT}`);
       console.log(`🌐 Frontend: ${process.env.FRONTEND_URL || "http://localhost:5173"}`);
     });
   } catch (error) {
