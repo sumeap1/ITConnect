@@ -47,27 +47,30 @@ export default function DeveloperRegister() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/register-developer", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-          bio: formData.bio,
-          location: formData.location,
-          experience: formData.experience,
-          github: formData.github,
-          linkedin: formData.linkedin,
-          skills: formData.skills
-            .split(",")
-            .map((tech) => tech.trim())
-            .filter((tech) => tech !== ""), // ✅ required field for backend
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/auth/register-developer`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            password: formData.password,
+            bio: formData.bio,
+            location: formData.location,
+            experience: formData.experience,
+            github: formData.github,
+            linkedin: formData.linkedin,
+            skills: formData.skills
+              .split(",")
+              .map((tech) => tech.trim())
+              .filter((tech) => tech !== ""), // ✅ required field for backend
+          }),
+        }
+      );
 
       const data = await response.json();
 
