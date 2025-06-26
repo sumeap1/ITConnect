@@ -2,7 +2,7 @@
 
 import axios from "axios";
 // ✅ Adresa bazë e API-së
-const BASE_URL = "http://localhost:3000/api";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 // ✅ Instanca kryesore e Axios
 const api = axios.create({
