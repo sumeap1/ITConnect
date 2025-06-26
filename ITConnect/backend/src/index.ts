@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import express, { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
+import path from "path";
 
 import connectDB from "./lib/db";
 import authRoutes from "./routes/auth.routes";
@@ -16,50 +17,48 @@ import notificationRoutes from "./routes/DeveloperNotificationRoutes";
 import developerNotificationRoutes from "./routes/DeveloperNotificationRoutes";
 import companyNotificationRoutes from "./routes/companyNotificationRoutes";
 import companyProfileRoutes from "./routes/companyProfile.routes";
-import path from "path";
+
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// ✅ CORS middleware FIRST
 app.use(cors({
   origin: process.env.FRONTEND_URL,
-  credentials: true, // nëse përdor cookie/session
+  credentials: true,
 }));
 
-
-app.use("/api/companies", companyProfileRoutes);
-app.use('/api/jobs', jobRoutes); 
+// ✅ Body parsers
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
+
+// ✅ Static files
+app.use('/uploads', express.static('uploads'));
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+
+// ✅ Routes (only once per route!)
+app.use("/api/companies", companyProfileRoutes);
+app.use("/api/companies", companyRoutes);
+app.use("/api/jobs", jobRoutes);
 app.use("/api/notifications", developerNotificationRoutes);
 app.use("/api/notifications", companyNotificationRoutes);
-app.use("/api/developer", developerRoutes);
-// ✅ Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/authcontroller", authRoutes); // nëse ke ende nevojë për këtë
-app.use("/api/developers", developerRoutes);
-
-app.use('/uploads', express.static('uploads'));
-
-app.use("/api/jobs", jobRoutes);
-app.use("/api/companies", companyRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/developer", developerRoutes);
+app.use("/api/developers", developerRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/authcontroller", authRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/newsletter", newsletterRoutes);
-app.use("/api", companyRoutes);
-app.use("/api", jobRoutes); 
-app.use("/api", authRoutes);
-app.use("/api/companies", companyRoutes);
-app.use("/api", jobRoutes);
-// ✅ Legacy authController direct routing (opsional)
+
+// ✅ Legacy authController direct routing (optional)
 const authControllerRouter = express.Router();
 authControllerRouter.post("/register-company", authController.registerCompany);
 authControllerRouter.post("/login-company", authController.loginCompany);
 authControllerRouter.post("/register-developer", authController.registerDeveloper);
 authControllerRouter.post("/login-developer", authController.loginDeveloper);
 app.use("/api/authcontroller", authControllerRouter);
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+
 // ✅ Health check
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", message: "Server is running" });
@@ -74,8 +73,6 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   });
 });
 
-app.use('/api/developer', developerRoutes);
-
 // ✅ Start server
 const startServer = async () => {
   try {
@@ -89,8 +86,8 @@ const startServer = async () => {
     process.exit(1);
   }
 };
-// importo dotenv në fillim të projektit nëse nuk e ke
-require('dotenv').config();
+
+startServer();
 
 
 
