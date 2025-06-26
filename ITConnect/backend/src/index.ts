@@ -22,13 +22,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ✅ Middleware
-app.use(
-  cors({
-    origin: ["http://localhost:5173"],
-    credentials: true,
-  })
-);
+
 app.use("/api/companies", companyProfileRoutes);
 app.use('/api/jobs', jobRoutes); 
 app.use(bodyParser.json({ limit: '10mb' }));
@@ -90,5 +84,13 @@ const startServer = async () => {
     process.exit(1);
   }
 };
+// importo dotenv në fillim të projektit nëse nuk e ke
+require('dotenv').config();
 
+
+
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true, // nëse përdor cookie/session
+}));
 startServer();
