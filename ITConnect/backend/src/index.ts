@@ -22,6 +22,11 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true, // nëse përdor cookie/session
+}));
+
 
 app.use("/api/companies", companyProfileRoutes);
 app.use('/api/jobs', jobRoutes); 
@@ -89,8 +94,4 @@ require('dotenv').config();
 
 
 
-app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  credentials: true, // nëse përdor cookie/session
-}));
-startServer();
+
