@@ -21,7 +21,7 @@ import companyProfileRoutes from "./routes/companyProfile.routes";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 // ✅ CORS middleware FIRST
 app.use(cors({
